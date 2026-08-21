@@ -1,50 +1,89 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report
+- Version change: none -> 1.0.0 (initial constitution)
+- Modified principles: none
+- Added sections: Core Principles, Architecture Constraints, Development Workflow
+- Removed sections: none
+- Follow-up TODOs: RATIFICATION_DATE remains TODO because the original adoption date
+	is not available in the repository.
+-->
+
+# Shell App Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Domain-Centered Design
+Business rules MUST live in the domain layer and MUST NOT depend on UI frameworks,
+transport protocols, persistence, or infrastructure details. Domain concepts MUST
+be represented explicitly through cohesive types and behavior. This keeps business
+meaning stable while adapters and delivery mechanisms evolve.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Dependency Inversion and Explicit Boundaries
+Dependencies MUST point toward policy: presentation and infrastructure code may
+depend on application and domain code, but inner layers MUST NOT depend on outer
+layers. External systems MUST be accessed through interfaces owned by the inner
+layer, with adapters implementing those interfaces at the boundary. Cross-layer
+coupling MUST be treated as an architectural defect.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Single Responsibility and Cohesive Components
+Each module, class, and function MUST have one clear reason to change. Components
+MUST expose small, intention-revealing interfaces and MUST keep related data and
+behavior together. Duplication MUST be removed when it represents duplicated
+knowledge; accidental abstraction and speculative generality MUST be avoided.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Testable Design
+New and changed behavior MUST be covered by focused unit tests at the level where
+the behavior is owned. Unit tests MUST be deterministic, isolated from network,
+filesystem, databases, browsers, and real external services, and MUST verify
+observable outcomes rather than implementation details. Integration tests and
+end-to-end tests are not required for this project; unit tests are the sufficient
+testing gate unless a future amendment explicitly changes this rule.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Simplicity, Clarity, and Evolution
+Implementations MUST use the simplest design that satisfies the current
+requirement. Abstractions MUST have a demonstrated purpose, and architectural
+complexity MUST be justified in the change documentation. Public contracts MUST
+be explicit and changes to them MUST identify compatibility impact and migration
+needs. Readability and maintainability take precedence over premature optimization.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Architecture Constraints
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+The application MUST separate domain, application/use-case, interface-adapter,
+and infrastructure concerns. UI code MUST translate user interaction into
+application requests and MUST NOT implement core business rules. Infrastructure
+code MUST be replaceable without changing domain behavior. Shared types MUST be
+owned by the layer whose policy they express, rather than becoming an unbounded
+global utility layer.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+Security-sensitive decisions MUST be centralized in appropriate application or
+domain policies, and credentials or tokens MUST NOT be embedded in source code,
+logs, or test fixtures. Errors crossing a boundary MUST be translated into a
+stable, user-appropriate contract without leaking internal implementation details.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+## Development Workflow
+
+Every change MUST identify the affected architectural layer and its dependency
+direction. Before implementation, the intended boundary and failure behavior
+MUST be clear. Reviewers MUST verify that business rules remain inward-facing,
+new dependencies respect the dependency rule, and unit tests cover changed
+behavior and relevant edge cases.
+
+The quality gate is a passing formatter/linter, a passing unit-test suite, and no
+unjustified architectural boundary violations. Integration and end-to-end test
+stages MUST NOT be added solely to satisfy this constitution.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution governs architecture and quality decisions in the shell app.
+When a change conflicts with a principle, the change MUST either be redesigned to
+comply or include an explicit amendment and rationale. Amendments require a
+documented change proposal, review by the project maintainers, an updated Sync
+Impact Report, and a version bump according to the policy below.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+Constitution versions use semantic versioning. MAJOR increments indicate removal
+or incompatible redefinition of a principle. MINOR increments indicate a new
+principle or materially expanded governance requirement. PATCH increments indicate
+clarifications, wording fixes, and other non-semantic refinements. Compliance MUST
+be checked during review and whenever the architecture or quality gate changes.
+
+**Version**: 1.0.0 | **Ratified**: TODO(RATIFICATION_DATE): original adoption date unknown | **Last Amended**: 2026-08-21
