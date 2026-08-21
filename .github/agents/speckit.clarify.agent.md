@@ -12,6 +12,10 @@ handoffs:
 $ARGUMENTS
 ```
 
+## Cross-Platform Script Execution
+
+Detect the host OS before running any `.specify` script. On Windows, run the matching `.ps1` from `.specify/scripts/powershell/` with `powershell` or `pwsh`; on non-Windows systems, run the matching `.sh` from `.specify/scripts/bash/` with `bash`. Preserve equivalent arguments and JSON parsing on both platforms.
+
 You **MUST** consider the user input before proceeding (if not empty).
 
 ## Pre-Execution Checks
@@ -57,7 +61,7 @@ Note: This clarification workflow is expected to run (and be completed) BEFORE i
 
 Execution steps:
 
-1. Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -PathsOnly` from repo root **once** (combined `--json --paths-only` mode / `-Json -PathsOnly`). Parse minimal JSON payload fields:
+1. Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -PathsOnly` on Windows or `.specify/scripts/bash/check-prerequisites.sh --json --paths-only` elsewhere, from repo root **once**. Parse minimal JSON payload fields:
    - `FEATURE_DIR`
    - `FEATURE_SPEC`
    - (Optionally capture `IMPL_PLAN`, `TASKS` for future chained flows.)

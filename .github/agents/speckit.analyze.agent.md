@@ -8,6 +8,10 @@ description: Perform a non-destructive cross-artifact consistency and quality an
 $ARGUMENTS
 ```
 
+## Cross-Platform Script Execution
+
+Detect the host OS before running any `.specify` script. On Windows, run the matching `.ps1` from `.specify/scripts/powershell/` with `powershell` or `pwsh`; on non-Windows systems, run the matching `.sh` from `.specify/scripts/bash/` with `bash`. Preserve equivalent arguments and JSON parsing on both platforms.
+
 You **MUST** consider the user input before proceeding (if not empty).
 
 ## Pre-Execution Checks
@@ -59,7 +63,7 @@ Identify inconsistencies, duplications, ambiguities, and underspecified items ac
 
 ### 1. Initialize Analysis Context
 
-Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks` once from repo root and parse JSON for FEATURE_DIR and AVAILABLE_DOCS. Derive absolute paths:
+Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks` on Windows or `.specify/scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks` elsewhere, once from repo root. Parse JSON for FEATURE_DIR and AVAILABLE_DOCS. Derive absolute paths:
 
 - SPEC = FEATURE_DIR/spec.md
 - PLAN = FEATURE_DIR/plan.md

@@ -12,6 +12,10 @@ handoffs:
 $ARGUMENTS
 ```
 
+## Cross-Platform Script Execution
+
+Detect the host OS before running any `.specify` script. On Windows, run the matching `.ps1` from `.specify/scripts/powershell/` with `powershell` or `pwsh`; on non-Windows systems, run the matching `.sh` from `.specify/scripts/bash/` with `bash`. Preserve equivalent arguments and JSON parsing on both platforms.
+
 You **MUST** consider the user input before proceeding (if not empty).
 
 ## Scope Guard
@@ -76,7 +80,7 @@ preset/template resolution stack.
 
 Follow this execution flow:
 
-1. Run `.specify/scripts/powershell/resolve-template.ps1 constitution-template -Json` from the repository root and parse `TEMPLATE_CONTENT` as the active template.
+1. Run `.specify/scripts/powershell/resolve-template.ps1 constitution-template -Json` on Windows or `.specify/scripts/bash/resolve-template.sh constitution-template --json` elsewhere from the repository root, then parse `TEMPLATE_CONTENT` as the active template.
    - The shared resolver applies project overrides, composing preset layers, and extension layers
      before the core template fallback. It MUST succeed before continuing.
    - If it fails, stop and report the resolution error; do not continue with only one contributing

@@ -16,6 +16,10 @@ handoffs:
 $ARGUMENTS
 ```
 
+## Cross-Platform Script Execution
+
+Detect the host OS before running any `.specify` script. On Windows, run the matching `.ps1` from `.specify/scripts/powershell/` with `powershell` or `pwsh`; on non-Windows systems, run the matching `.sh` from `.specify/scripts/bash/` with `bash`. Preserve equivalent arguments and JSON parsing on both platforms.
+
 You **MUST** consider the user input before proceeding (if not empty).
 
 ## Pre-Execution Checks
@@ -55,7 +59,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 ## Outline
 
-1. **Setup**: Run `.specify/scripts/powershell/setup-plan.ps1 -Json` from repo root and parse JSON for FEATURE_SPEC, IMPL_PLAN, SPECS_DIR, BRANCH. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
+1. **Setup**: Run `.specify/scripts/powershell/setup-plan.ps1 -Json` on Windows or `.specify/scripts/bash/setup-plan.sh --json` elsewhere, from repo root. Parse JSON for FEATURE_SPEC, IMPL_PLAN, SPECS_DIR, BRANCH. Use the quoting rules of the selected shell for arguments containing apostrophes.
 
 2. **Load context**: Read FEATURE_SPEC and `.specify/memory/constitution.md`. Load IMPL_PLAN template (already copied).
 

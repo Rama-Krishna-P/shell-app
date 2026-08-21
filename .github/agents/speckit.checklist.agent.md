@@ -38,6 +38,10 @@ description: Generate a custom checklist for the current feature based on user r
 $ARGUMENTS
 ```
 
+## Cross-Platform Script Execution
+
+Detect the host OS before running any `.specify` script. On Windows, run the matching `.ps1` from `.specify/scripts/powershell/` with `powershell` or `pwsh`; on non-Windows systems, run the matching `.sh` from `.specify/scripts/bash/` with `bash`. Preserve equivalent arguments and JSON parsing on both platforms.
+
 You **MUST** consider the user input before proceeding (if not empty).
 
 ## Pre-Execution Checks
@@ -77,7 +81,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 ## Execution Steps
 
-1. **Setup**: Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -Template checklist-template` from repo root and parse JSON for FEATURE_DIR, AVAILABLE_DOCS list, and TEMPLATE_CONTENT.
+1. **Setup**: Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -Template checklist-template` on Windows or `.specify/scripts/bash/check-prerequisites.sh --json --template checklist-template` elsewhere, from repo root. Parse JSON for FEATURE_DIR, AVAILABLE_DOCS list, and TEMPLATE_CONTENT.
    - All file paths must be absolute.
    - For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
 
