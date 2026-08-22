@@ -31,7 +31,7 @@ OIDC, Redis, cookies, CSRF, micro-app transport, manifests, and telemetry.
 
 **Testing**: Deterministic unit tests and narrow OIDC/BFF/UI/navigation contract checks; formatter/linter and production builds
 
-**Target Platform**: HTTPS Node SSR service and current Chrome, Edge, Firefox, and Safari desktop/mobile browsers
+**Target Platform**: HTTPS Node SSR service and the latest two major versions of Chrome, Edge, Firefox, and Safari on supported desktop/mobile platforms, including iOS Safari
 
 **Project Type**: Web application/backend-for-frontend with hosted micro-app
 
@@ -86,15 +86,17 @@ specs/[###-feature]/
 ├── src/
 │   ├── app/                 # SSR/browser composition and accessible shell UI
 │   ├── server/              # HTTP routes, SSR handlers, boundary translation
-│   ├── auth/oidc/            # OIDC policy and provider adapter
-│   ├── session/              # session/transaction policies and Redis adapter
+│   ├── domain/               # inward-facing domain policies and types
+│   ├── application/          # use cases and inner-layer ports
+│   ├── infrastructure/       # OIDC, Redis, security, and telemetry adapters
 │   ├── shell/                # authenticated shell and host actions
 │   ├── navigation/           # manifest and route allow-list policy
-│   ├── micro-apps/           # private C01 lifecycle/transport adapter
+│   ├── micro-apps/           # private BFF-UI-001 lifecycle/transport adapter
 │   ├── security/             # CSRF, cookies, rate limiting, safe return paths
 │   └── telemetry/            # redaction, versioned events, async delivery
 ├── public/
 ├── tests/unit/
+├── tests/contracts/
 └── deploy/config/
 ```
 

@@ -110,8 +110,11 @@ description: "Implementation tasks for Login and User Greeting"
 - [ ] T039 [P] Add production deployment configuration, secret-store references, TLS requirements, Redis TTL settings, and horizontal-scaling notes in `deploy/config/`
 - [ ] T040 [P] Add WCAG 2.2 AA keyboard and accessibility acceptance checks for login, greeting, errors, status, focus, and sign-out in `tests/unit/accessibility/`
 - [ ] T041 Run formatter, linter, deterministic unit tests, narrow contract checks, and Angular SSR production builds from the repository root
-- [ ] T042 Run the scenarios and validation commands in `specs/001-login-greeting/quickstart.md` and record any contract or configuration deviations in `specs/001-login-greeting/`
+- [ ] T042 Run the scenarios and validation commands in `specs/001-login-greeting/quickstart.md` and record any contract or configuration deviations in `specs/001-login-greeting/validation-results.md`
 - [ ] T043 [P] Update `README.md` with architecture boundaries, local configuration, security constraints, run commands, and versioned contract migration guidance
+- [ ] T044 Add focused unit coverage for configured provider expiration, inactivity, renewal, and revocation defaults in `tests/unit/auth/provider-session-defaults.test.ts`
+- [ ] T045 Add focused unit coverage for every required telemetry category: authentication, session, route-denial, rate-limit, micro-app, dependency-failure, and sign-out events in `tests/unit/telemetry/event-coverage.test.ts`
+- [ ] T046 Add deterministic performance validation for SC-001, measuring valid login-to-greeting completion against the 2-second target in `tests/unit/performance/login-greeting-performance.test.ts`
 
 ---
 
@@ -157,4 +160,4 @@ description: "Implementation tasks for Login and User Greeting"
 
 ### Format Validation
 
-All 43 implementation tasks use the required `- [ ]` checkbox, sequential `T###` ID, optional `[P]` marker only for parallelizable work, required `[US#]` labels in story phases, and an explicit repository-relative file path in every description.
+All 46 implementation tasks use the required `- [ ]` checkbox, sequential task IDs, optional `[P]` marker only for parallelizable work, required `[US#]` labels in story phases, and an explicit repository-relative file path in every description.

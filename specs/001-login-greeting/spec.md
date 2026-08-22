@@ -19,6 +19,7 @@
 - Q: How should the Shell App normalize usernames before displaying them? → A: Preserve provider value.
 - Q: Which accessibility baseline should define acceptance for the login and greeting journeys? → A: WCAG 2.2 AA.
 - Q: Should a user be allowed to maintain multiple authenticated sessions at the same time? → A: Allow multiple sessions per user.
+- Q: Which browser baseline should define acceptance? → A: The latest two major versions of Chrome, Edge, Firefox, and Safari on supported desktop and mobile platforms, including iOS Safari.
 
 ## User Scenarios & Testing
 
@@ -126,6 +127,7 @@ As an authenticated user, I want to sign out so that another person using the sa
 
 - Users are pre-registered in Keycloak; registration, password recovery, profile editing, multi-factor authentication, social login, administrative user management, and role-based authorization beyond authenticated versus unauthenticated access are outside this feature.
 - The first release targets web browsers on the supported current desktop and mobile browser baseline; native mobile applications are out of scope.
+- The supported browser baseline is the latest two major versions of Chrome, Edge, Firefox, and Safari on supported desktop and mobile platforms, including iOS Safari.
 - Shell App is the browser's only application endpoint and owns the server-side session, route protection, navigation, and micro-app hosting.
 - A user may maintain multiple independent authenticated sessions across browsers or devices; signing out one session does not invalidate the others.
 - `login-greeting-web` owns greeting presentation only and has no OIDC, credential, persistent-session, token, navigation, or route-protection responsibility.
