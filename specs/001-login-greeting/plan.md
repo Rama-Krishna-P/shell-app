@@ -79,7 +79,7 @@ specs/[###-feature]/
 -->
 
 ```text
-apps/shell-app/
+.
 ├── angular.json
 ├── package.json
 ├── tsconfig.json
@@ -98,8 +98,8 @@ apps/shell-app/
 └── deploy/config/
 ```
 
-**Structure Decision**: Use the approved single Angular SSR application under
-`apps/shell-app/`. Server-only authentication and session concerns are separate
+**Structure Decision**: Use the approved single Angular SSR application at the
+repository root. Server-only authentication and session concerns are separate
 from browser composition, while domain/application policies are isolated behind
 interfaces. Deployment configuration is kept outside source code. The initial
 `login-greeting-web` micro-app is an independently replaceable private component;
