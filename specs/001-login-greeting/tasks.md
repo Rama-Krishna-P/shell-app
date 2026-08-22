@@ -14,11 +14,11 @@ description: "Implementation tasks for Login and User Greeting"
 
 **Purpose**: Establish the Angular SSR application and repository quality tooling.
 
-- [ ] T001 Create the Angular SSR project structure at the repository root with `src/`, `public/`, `tests/unit/`, and `deploy/config/` directories
-- [ ] T002 Initialize `package.json` with Angular SSR, Node.js 22, TypeScript 5.x, OIDC, Redis, lint, formatting, and unit-test dependencies
-- [ ] T003 [P] Configure `angular.json`, `tsconfig.json`, and SSR build targets
-- [ ] T004 [P] Configure `.eslintrc` and `.prettierrc` with the repository quality gate
-- [ ] T005 [P] Add non-secret runtime configuration schema and example values in `deploy/config/` without credentials, tokens, or passwords
+- [X] T001 Create the Angular SSR project structure at the repository root with `src/`, `public/`, `tests/unit/`, and `deploy/config/` directories
+- [X] T002 Initialize `package.json` with Angular SSR, Node.js 22, TypeScript 5.x, OIDC, Redis, lint, formatting, and unit-test dependencies
+- [X] T003 [P] Configure `angular.json`, `tsconfig.json`, and SSR build targets
+- [X] T004 [P] Configure `.eslintrc` and `.prettierrc` with the repository quality gate
+- [X] T005 [P] Add non-secret runtime configuration schema and example values in `deploy/config/` without credentials, tokens, or passwords
 
 ---
 

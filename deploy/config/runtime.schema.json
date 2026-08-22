@@ -1,0 +1,62 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "issuerUrl",
+        "clientId",
+        "redirectUri",
+        "logoutUri",
+        "redisUrl",
+        "cookieName",
+        "transactionTtlSeconds",
+        "usernameMaxUnicodeCharacters",
+        "greetingEntry",
+        "telemetrySink"
+    ],
+    "properties": {
+        "issuerUrl": {
+            "type": "string",
+            "format": "uri"
+        },
+        "clientId": {
+            "type": "string",
+            "minLength": 1
+        },
+        "redirectUri": {
+            "type": "string",
+            "format": "uri"
+        },
+        "logoutUri": {
+            "type": "string",
+            "format": "uri"
+        },
+        "redisUrl": {
+            "type": "string",
+            "pattern": "^rediss://"
+        },
+        "cookieName": {
+            "type": "string",
+            "minLength": 1
+        },
+        "transactionTtlSeconds": {
+            "type": "integer",
+            "const": 300
+        },
+        "usernameMaxUnicodeCharacters": {
+            "type": "integer",
+            "const": 128
+        },
+        "greetingEntry": {
+            "type": "string",
+            "format": "uri"
+        },
+        "telemetrySink": {
+            "type": "string",
+            "enum": [
+                "disabled",
+                "configured-secret-store"
+            ]
+        }
+    }
+}

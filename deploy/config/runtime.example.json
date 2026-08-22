@@ -1,0 +1,12 @@
+{
+    "issuerUrl": "https://keycloak.example.invalid/realms/example",
+    "clientId": "shell-app",
+    "redirectUri": "https://shell.example.invalid/auth/callback",
+    "logoutUri": "https://shell.example.invalid/login",
+    "redisUrl": "rediss://redis.example.invalid:6380",
+    "cookieName": "shell_session",
+    "transactionTtlSeconds": 300,
+    "usernameMaxUnicodeCharacters": 128,
+    "greetingEntry": "https://micro-app.example.invalid",
+    "telemetrySink": "disabled"
+}
