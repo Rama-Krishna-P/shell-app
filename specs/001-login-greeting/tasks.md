@@ -26,14 +26,14 @@ description: "Implementation tasks for Login and User Greeting"
 
 **Purpose**: Build inward-facing policies and replaceable boundary interfaces before user-story implementation.
 
-- [ ] T006 Define shared domain result types, bounded username projection, safe return-path value object, and failure outcomes in `src/domain/`
-- [ ] T007 [P] Define OIDC, session, transaction, CSRF, rate-limit, manifest, micro-app, and telemetry ports owned by inner layers in `src/application/ports/`
-- [ ] T008 [P] Implement environment/configuration parsing and fail-closed validation in `src/infrastructure/config/`
-- [ ] T009 [P] Implement Redis connection and TTL-backed session/transaction repository adapters in `src/infrastructure/session/`
-- [ ] T010 [P] Implement secure cookie, CSRF-token, and safe same-origin return-path adapters in `src/infrastructure/security/`
-- [ ] T011 [P] Implement versioned redacted asynchronous telemetry adapter and allow-listed event schema in `src/infrastructure/telemetry/`
-- [ ] T012 [P] Implement centralized HTTP error translation, correlation IDs, and fail-closed middleware in `src/server/middleware/`
-- [ ] T013 Document the versioned contract ownership and breaking-change migration procedure in `specs/001-login-greeting/contracts/README.md`
+- [X] T006 Define shared domain result types, bounded username projection, safe return-path value object, and failure outcomes in `src/domain/`
+- [X] T007 [P] Define OIDC, session, transaction, CSRF, rate-limit, manifest, micro-app, and telemetry ports owned by inner layers in `src/application/ports/`
+- [X] T008 [P] Implement environment/configuration parsing and fail-closed validation in `src/infrastructure/config/`
+- [X] T009 [P] Implement Redis connection and TTL-backed session/transaction repository adapters in `src/infrastructure/session/`
+- [X] T010 [P] Implement secure cookie, CSRF-token, and safe same-origin return-path adapters in `src/infrastructure/security/`
+- [X] T011 [P] Implement versioned redacted asynchronous telemetry adapter and allow-listed event schema in `src/infrastructure/telemetry/`
+- [X] T012 [P] Implement centralized HTTP error translation, correlation IDs, and fail-closed middleware in `src/server/middleware/`
+- [X] T013 Document the versioned contract ownership and breaking-change migration procedure in `specs/001-login-greeting/contracts/README.md`
 
 **Checkpoint**: The Angular SSR shell has validated configuration, replaceable adapters, secure boundary primitives, and a fail-closed server composition root.
 
