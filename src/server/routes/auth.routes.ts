@@ -2,16 +2,24 @@ import { Router, Request, Response } from 'express';
 import { LoginEntryUseCase } from '../../application/auth/login-entry.use-case';
 import { OidcCallbackUseCase } from '../../application/auth/oidc-callback.use-case';
 import { SecureCookieAdapter } from '../../infrastructure/security/security-adapters';
+import { AuthenticatedSession } from '../../domain/auth';
+import { SessionRepository } from '../../application/ports';
 
 export interface AuthRouteOptions {
     readonly login: LoginEntryUseCase;
     readonly callback: OidcCallbackUseCase;
     readonly sessionCookie: SecureCookieAdapter;
+    readonly sessions: SessionRepository<AuthenticatedSession>;
 }
 
 export function createAuthRouter(options: AuthRouteOptions): Router {
     const router = Router();
-    router.get('/', (request, response) => handleLogin(options, request, response));
+    router.get('/api/session', async (request, response) => {
+        const reference = options.sessionCookie.read(request.headers.cookie);
+        const session = reference ? await options.sessions.get(reference) : null;
+        if (!session || !session.active || session.expiresAt <= Date.now()) { response.status(401).json({ authenticated: false }); return; }
+        response.json({ authenticated: true, username: session.username.value });
+    });
     router.get('/login', (request, response) => handleLogin(options, request, response));
     router.get('/auth/callback', async (request, response) => {
         const result = await options.callback.execute(request.query['code'], request.query['state']);

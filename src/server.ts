@@ -5,6 +5,8 @@ import {
     writeResponseToNodeResponse,
 } from '@angular/ssr/node';
 import { existsSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { config as loadDotenv } from 'dotenv';
 import express from 'express';
 import { LoginEntryUseCase } from './application/auth/login-entry.use-case';
@@ -25,6 +27,8 @@ loadDotenv({ path: dotenvPath });
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
+const browserAssets = join(dirname(fileURLToPath(import.meta.url)), '../browser');
+app.use(express.static(browserAssets, { index: false }));
 
 // The application composition supplies real use cases and adapters at runtime.
 // This router is intentionally mounted by the deployment composition root.
@@ -51,7 +55,8 @@ if (runtimeConfig.ok && process.env['SHELL_OIDC_CLIENT_SECRET']) {
             transactions: transactions as unknown as TransactionRepository<CallbackTransaction>,
             sessions,
         }),
-        sessionCookie: new SecureCookieAdapter(runtimeConfig.value.cookieName),
+        sessionCookie: new SecureCookieAdapter(runtimeConfig.value.cookieName, runtimeConfig.value.redirectUri.startsWith('https:')),
+        sessions,
     });
     app.use(authRouter);
 } else {
