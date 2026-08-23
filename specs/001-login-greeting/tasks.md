@@ -47,16 +47,16 @@ description: "Implementation tasks for Login and User Greeting"
 
 ### Implementation for User Story 1
 
-- [ ] T014 [P] [US1] Implement `UserAccount`, `AuthenticatedSession`, and `OidcTransaction` domain types and state transitions in `src/domain/auth/`
-- [ ] T015 [P] [US1] Implement the Keycloak authorization-code PKCE adapter with issuer, client, redirect, state, nonce, signature, expiry, claim, and single-use transaction validation in `src/infrastructure/oidc/`
-- [ ] T016 [US1] Implement login-entry and OIDC callback use cases, including callback failure handling and browser session-reference rotation, in `src/application/auth/`
-- [ ] T017 [US1] Add `/`, `/login`, and `/auth/callback` SSR route handlers that redirect unauthenticated users to Keycloak and redirect successful callbacks only to safe same-origin paths in `src/server/routes/auth.routes.ts`
-- [ ] T018 [P] [US1] Implement `MicroAppManifestEntry` and allow-listed `login-greeting-web` manifest configuration in `src/navigation/`
-- [ ] T019 [P] [US1] Implement `GreetingViewModel` mapping with 128-Unicode-character bounded username preservation and escaped text rendering in `src/micro-apps/greeting/`
-- [ ] T020 [US1] Implement authenticated shell composition and BFF-UI-001 mount boundary for `login-greeting-web` in `src/shell/`
-- [ ] T021 [US1] Add accessible Angular SSR login/shell/greeting views with labels, status regions, predictable focus, keyboard operation, and WCAG 2.2 AA semantics in `src/app/`
-- [ ] T022 [US1] Add focused deterministic unit tests for OIDC validation, transaction consumption, session rotation, username bounds/escaping, and authenticated greeting projection in `tests/unit/us1-login-greeting/`
-- [ ] T023 [US1] Add narrow contract checks for OIDC-001, BROWSER-BFF-001, BFF-UI-001, and SHELL-NAV-001 in `tests/contracts/us1-login-greeting/`
+- [X] T014 [P] [US1] Implement `UserAccount`, `AuthenticatedSession`, and `OidcTransaction` domain types and state transitions in `src/domain/auth/`
+- [X] T015 [P] [US1] Implement the Keycloak authorization-code PKCE adapter with issuer, client, redirect, state, nonce, signature, expiry, claim, and single-use transaction validation in `src/infrastructure/oidc/`
+- [X] T016 [US1] Implement login-entry and OIDC callback use cases, including callback failure handling and browser session-reference rotation, in `src/application/auth/`
+- [X] T017 [US1] Add `/`, `/login`, and `/auth/callback` SSR route handlers that redirect unauthenticated users to Keycloak and redirect successful callbacks only to safe same-origin paths in `src/server/routes/auth.routes.ts`
+- [X] T018 [P] [US1] Implement `MicroAppManifestEntry` and allow-listed `login-greeting-web` manifest configuration in `src/navigation/`
+- [X] T019 [P] [US1] Implement `GreetingViewModel` mapping with 128-Unicode-character bounded username preservation and escaped text rendering in `src/micro-apps/greeting/`
+- [X] T020 [US1] Implement authenticated shell composition and BFF-UI-001 mount boundary for `login-greeting-web` in `src/shell/`
+- [X] T021 [US1] Add accessible Angular SSR login/shell/greeting views with labels, status regions, predictable focus, keyboard operation, and WCAG 2.2 AA semantics in `src/app/`
+- [X] T022 [US1] Add focused deterministic unit tests for OIDC validation, transaction consumption, session rotation, username bounds/escaping, and authenticated greeting projection in `tests/unit/us1-login-greeting/`
+- [X] T023 [X] [US1] Add narrow contract checks for OIDC-001, BROWSER-BFF-001, BFF-UI-001, and SHELL-NAV-001 in `tests/contracts/us1-login-greeting/`
 
 **Checkpoint**: User Story 1 is independently functional: valid authentication reaches the greeting, refresh preserves access, and username content is rendered safely.
 

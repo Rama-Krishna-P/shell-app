@@ -5,9 +5,14 @@ import {
     writeResponseToNodeResponse,
 } from '@angular/ssr/node';
 import express from 'express';
+import { createAuthRouter } from './server/routes/auth.routes';
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
+
+// The application composition supplies real use cases and adapters at runtime.
+// This router is intentionally mounted by the deployment composition root.
+export { createAuthRouter };
 
 app.use('*', (request, response, next) => {
     angularApp
