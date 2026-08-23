@@ -7,8 +7,20 @@ export interface RuntimeConfig {
     readonly telemetrySink: 'disabled' | 'configured-secret-store';
 }
 
-const isHttps = (value: unknown): value is string => typeof value === 'string' && new URL(value).protocol === 'https:';
-const isRediss = (value: unknown): value is string => typeof value === 'string' && new URL(value).protocol === 'rediss:';
+const isHttps = (value: unknown): value is string => {
+    if (typeof value !== 'string') return false;
+    try {
+        const url = new URL(value);
+        return url.protocol === 'https:' || (process.env['SHELL_ALLOW_INSECURE_LOCAL'] === 'true' && url.protocol === 'http:' && url.hostname === 'localhost');
+    } catch { return false; }
+};
+const isRediss = (value: unknown): value is string => {
+    if (typeof value !== 'string') return false;
+    try {
+        const url = new URL(value);
+        return url.protocol === 'rediss:' || (process.env['SHELL_ALLOW_INSECURE_LOCAL'] === 'true' && url.protocol === 'redis:' && url.hostname === 'localhost');
+    } catch { return false; }
+};
 
 export function parseRuntimeConfig(input: unknown): Result<RuntimeConfig, 'invalid-runtime-config'> {
     if (!input || typeof input !== 'object') return failure('invalid-runtime-config');

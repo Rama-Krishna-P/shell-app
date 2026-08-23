@@ -4,7 +4,7 @@ import { Result } from '../../domain/result';
 
 export interface OidcPort {
     beginLogin(returnPath: SafeReturnPath): Promise<Result<{ authorizationUrl: string; state: string }, 'dependency-failure' | 'validation-failure'>>;
-    completeLogin(code: string, state: string): Promise<Result<{ subject: string; username: BoundedUsername; providerSessionReference: string; expiresAt: number }, 'validation-failure' | 'dependency-failure'>>;
+    completeLogin(code: string, state: string, transaction?: unknown): Promise<Result<{ subject: string; username: BoundedUsername; providerSessionReference: string; expiresAt: number }, 'validation-failure' | 'dependency-failure'>>;
     logout(providerSessionReference: string): Promise<void>;
 }
 

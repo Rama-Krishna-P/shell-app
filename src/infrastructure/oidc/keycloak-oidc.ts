@@ -3,6 +3,7 @@ import {
     buildAuthorizationUrl,
     ClientSecretBasic,
     discovery,
+    allowInsecureRequests,
     randomNonce,
     randomPKCECodeVerifier,
     randomState,
@@ -58,7 +59,10 @@ const DEFAULT_TRANSACTION_TTL_SECONDS = 300;
 const MAX_TRANSACTION_TTL_SECONDS = 300;
 
 function validHttpsUrl(value: string): boolean {
-    try { return new URL(value).protocol === 'https:'; } catch { return false; }
+    try {
+        const url = new URL(value);
+        return url.protocol === 'https:' || (process.env['SHELL_ALLOW_INSECURE_LOCAL'] === 'true' && url.protocol === 'http:' && url.hostname === 'localhost');
+    } catch { return false; }
 }
 
 function sameUrl(left: string, right: string): boolean {
@@ -66,6 +70,14 @@ function sameUrl(left: string, right: string): boolean {
 }
 
 function hasString(value: unknown): value is string { return typeof value === 'string' && value.length > 0; }
+
+function errorMessage(error: unknown): string {
+    if (error instanceof Error) {
+        const cause = error.cause instanceof Error ? `; cause: ${error.cause.message}` : '';
+        return `${error.name}: ${error.message}${cause}`;
+    }
+    return 'unknown error';
+}
 
 /** Default openid-client v6 provider implementation. Tokens are reduced to claims immediately. */
 export class OpenIdClientProvider implements OidcProvider {
@@ -75,6 +87,7 @@ export class OpenIdClientProvider implements OidcProvider {
             config.clientId,
             { redirect_uris: [config.redirectUri] },
             ClientSecretBasic(config.clientSecret),
+            ...(process.env['SHELL_ALLOW_INSECURE_LOCAL'] === 'true' ? [{ execute: [allowInsecureRequests] }] : []),
         );
         const issuer = configuration.serverMetadata().issuer;
         if (!sameUrl(issuer, config.issuerUrl)) throw new Error('OIDC issuer mismatch');
@@ -143,13 +156,18 @@ export class KeycloakOidcAdapter implements OidcPort {
                 code_challenge_method: 'S256',
             });
             return success({ authorizationUrl, state });
-        } catch { return failure('dependency-failure'); }
+        } catch (error) {
+            console.warn('OIDC login initialization failed:', error instanceof Error ? error.message : 'unknown error');
+            return failure('dependency-failure');
+        }
     }
 
-    async completeLogin(code: string, state: string): Promise<Result<{ subject: string; username: BoundedUsername; providerSessionReference: string; expiresAt: number }, 'validation-failure' | 'dependency-failure'>> {
+    async completeLogin(code: string, state: string, suppliedTransaction?: unknown): Promise<Result<{ subject: string; username: BoundedUsername; providerSessionReference: string; expiresAt: number }, 'validation-failure' | 'dependency-failure'>> {
         if (!hasString(code) || !hasString(state)) return failure('validation-failure');
-        let transaction: OidcTransaction | null;
-        try { transaction = await this.transactions.consume(state); } catch { return failure('dependency-failure'); }
+        let transaction: OidcTransaction | null = suppliedTransaction as OidcTransaction | null;
+        if (!transaction) {
+            try { transaction = await this.transactions.consume(state); } catch { return failure('dependency-failure'); }
+        }
         if (!transaction) return failure('validation-failure');
         if (transaction.state !== state || transaction.expiresAt <= this.now() || transaction.createdAt > this.now() || transaction.expiresAt - transaction.createdAt > MAX_TRANSACTION_TTL_SECONDS * 1000) return failure('validation-failure');
         try {
@@ -157,9 +175,19 @@ export class KeycloakOidcAdapter implements OidcPort {
             const callbackUrl = new URL(this.config.redirectUri);
             callbackUrl.searchParams.set('code', code);
             callbackUrl.searchParams.set('state', state);
+            // Keycloak can advertise authorization_response_iss_parameter_supported
+            // while omitting `iss` from a standard code response. openid-client
+            // rejects that response before the token request. The issuer here is
+            // the value returned by validated discovery, not user input.
+            callbackUrl.searchParams.set('iss', provider.issuer);
             const tokenResult = await this.provider.exchangeCode(provider, callbackUrl.toString(), { expectedState: state, expectedNonce: transaction.nonce, codeVerifier: transaction.codeVerifier });
             return this.mapClaims(tokenResult.claims, tokenResult.expiresIn);
-        } catch { return failure('dependency-failure'); }
+        } catch (error) {
+            // Keep the provider error visible while avoiding authorization codes,
+            // tokens, and the transaction itself in application logs.
+            console.warn('OIDC code exchange failed:', errorMessage(error));
+            return failure('dependency-failure');
+        }
     }
 
     async logout(providerSessionReference: string): Promise<void> {
@@ -179,7 +207,12 @@ export class KeycloakOidcAdapter implements OidcPort {
         const username = BoundedUsername.create(claims['preferred_username']);
         const sessionReference = claims['sid'];
         const exp = claims['exp'];
-        if (!sameUrl(String(issuer), this.config.issuerUrl) || !hasString(subject) || !hasString(sessionReference) || !username.ok || !(typeof exp === 'number' && Number.isSafeInteger(exp) && exp > Math.floor(this.now() / 1000)) || !(audience === this.config.clientId || (Array.isArray(audience) && audience.includes(this.config.clientId)))) return failure('validation-failure');
+        if (!sameUrl(String(issuer), this.config.issuerUrl)) return failure('validation-failure');
+        if (!hasString(subject)) return failure('validation-failure');
+        if (!hasString(sessionReference)) return failure('validation-failure');
+        if (!username.ok) return failure('validation-failure');
+        if (!(typeof exp === 'number' && Number.isSafeInteger(exp) && exp > Math.floor(this.now() / 1000))) return failure('validation-failure');
+        if (!(audience === this.config.clientId || (Array.isArray(audience) && audience.includes(this.config.clientId)))) return failure('validation-failure');
         if (typeof expiresIn === 'number' && expiresIn <= 0) return failure('validation-failure');
         return success({ subject, username: username.value, providerSessionReference: sessionReference, expiresAt: exp * 1000 });
     }

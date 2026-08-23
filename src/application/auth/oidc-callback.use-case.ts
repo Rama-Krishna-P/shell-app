@@ -24,8 +24,15 @@ export class OidcCallbackUseCase {
     async execute(code: unknown, state: unknown): Promise<Result<CallbackResult, 'validation-failure' | 'dependency-failure'>> {
         if (typeof code !== 'string' || !code || typeof state !== 'string' || !state) return failure('validation-failure');
         const transaction = await this.dependencies.transactions.consume(state);
-        if (!transaction || transaction.expiresAt <= (this.dependencies.now?.() ?? Date.now())) return failure('validation-failure');
-        const identity = await this.dependencies.oidc.completeLogin(code, state);
+        if (!transaction) {
+            console.warn('OIDC callback validation failed: transaction missing or already consumed');
+            return failure('validation-failure');
+        }
+        if (transaction.expiresAt <= (this.dependencies.now?.() ?? Date.now())) {
+            console.warn('OIDC callback validation failed: transaction expired');
+            return failure('validation-failure');
+        }
+        const identity = await this.dependencies.oidc.completeLogin(code, state, transaction);
         if (!identity.ok) return identity;
         const now = this.dependencies.now?.() ?? Date.now();
         const session: AuthenticatedSession = {

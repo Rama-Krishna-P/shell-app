@@ -2,7 +2,8 @@ import Redis from 'ioredis';
 import { SessionRepository, TransactionRepository } from '../../application/ports';
 
 export function createRedisConnection(redisUrl: string): Redis {
-    if (!redisUrl.startsWith('rediss://')) throw new Error('Redis TLS is required');
+    const localDevelopment = process.env['SHELL_ALLOW_INSECURE_LOCAL'] === 'true' && redisUrl.startsWith('redis://localhost');
+    if (!redisUrl.startsWith('rediss://') && !localDevelopment) throw new Error('Redis TLS is required');
     return new Redis(redisUrl, { enableOfflineQueue: false, maxRetriesPerRequest: 1 });
 }
 

@@ -15,6 +15,7 @@ export function createAuthRouter(options: AuthRouteOptions): Router {
     router.get('/login', (request, response) => handleLogin(options, request, response));
     router.get('/auth/callback', async (request, response) => {
         const result = await options.callback.execute(request.query['code'], request.query['state']);
+        if (!result.ok) console.warn('OIDC callback failed:', result.error);
         if (!result.ok) { response.status(400).send('Unable to complete sign-in.'); return; }
         response.setHeader('Set-Cookie', options.sessionCookie.serialize(result.value.sessionReference));
         response.redirect(result.value.returnPath);
@@ -23,6 +24,7 @@ export function createAuthRouter(options: AuthRouteOptions): Router {
 }
 
 async function handleLogin(options: AuthRouteOptions, request: Request, response: Response): Promise<void> {
+    console.log('Login request received with returnTo:', request.query['returnTo']);
     const result = await options.login.execute(typeof request.query['returnTo'] === 'string' ? request.query['returnTo'] : '/');
     if (!result.ok) { response.status(503).send('Sign-in is temporarily unavailable.'); return; }
     response.redirect(result.value.authorizationUrl);
