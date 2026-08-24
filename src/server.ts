@@ -16,7 +16,8 @@ import { OidcTransaction } from './infrastructure/oidc/keycloak-oidc';
 import { TransactionRepository } from './application/ports';
 import { loadRuntimeConfig } from './infrastructure/config/runtime-config';
 import { KeycloakOidcAdapter } from './infrastructure/oidc/keycloak-oidc';
-import { createRedisConnection, RedisSessionRepository, RedisTransactionRepository } from './infrastructure/session/redis-repositories';
+import { createRedisConnection, RedisLoginRateLimitAdapter, RedisSessionRepository, RedisTransactionRepository } from './infrastructure/session/redis-repositories';
+import { LoginRateLimitPolicy } from './application/security/login-rate-limit.policy';
 import { SecureCookieAdapter } from './infrastructure/security/security-adapters';
 import { createAuthRouter } from './server/routes/auth.routes';
 
@@ -57,6 +58,7 @@ if (runtimeConfig.ok && process.env['SHELL_OIDC_CLIENT_SECRET']) {
         }),
         sessionCookie: new SecureCookieAdapter(runtimeConfig.value.cookieName, runtimeConfig.value.redirectUri.startsWith('https:')),
         sessions,
+        rateLimit: new LoginRateLimitPolicy(new RedisLoginRateLimitAdapter(redis)),
     });
     app.use(authRouter);
 } else {

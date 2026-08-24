@@ -5,6 +5,7 @@ import { PLATFORM_ID } from '@angular/core';
 interface SessionResponse {
     readonly authenticated: boolean;
     readonly username?: string;
+    readonly message?: string;
 }
 
 @Component({
@@ -12,7 +13,7 @@ interface SessionResponse {
     standalone: true,
     template: `<main aria-labelledby="page-title">
             <h1 id="page-title">Shell App</h1>
-            <p role="status" aria-live="polite">{{ username ? 'You are signed in.' : sessionResolved ? 'Sign in to continue.' : 'Checking your session.' }}</p>
+            <p role="status" aria-live="polite">{{ username ? 'You are signed in.' : errorMessage ?? (sessionResolved ? 'Sign in to continue.' : 'Checking your session.') }}</p>
             @if (username) { <section aria-labelledby="greeting-title"><h2 id="greeting-title">Welcome, {{ username }}</h2><p>Your personalized greeting is ready.</p></section> }
             @else if (sessionResolved) { <a href="/login" aria-label="Sign in to the Shell App">Sign in</a> }
         </main>`,
@@ -21,6 +22,7 @@ interface SessionResponse {
 export class App implements OnInit {
     @Input() username: string | null = null;
     protected sessionResolved = false;
+    protected errorMessage: string | null = null;
 
     private readonly platformId = inject(PLATFORM_ID);
     private readonly changeDetector = inject(ChangeDetectorRef);
@@ -31,10 +33,12 @@ export class App implements OnInit {
             .then((response): Promise<SessionResponse> => response.ok ? response.json() : Promise.resolve({ authenticated: false }))
             .then((session) => {
                 this.username = session.authenticated ? session.username ?? null : null;
+                this.errorMessage = session.authenticated ? null : session.message ?? null;
                 this.sessionResolved = true;
                 this.changeDetector.markForCheck();
             })
             .catch(() => {
+                this.errorMessage = 'Sign-in is temporarily unavailable.';
                 this.sessionResolved = true;
                 this.changeDetector.markForCheck();
             });

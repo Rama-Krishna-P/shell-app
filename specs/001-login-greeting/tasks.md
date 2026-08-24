@@ -70,13 +70,13 @@ description: "Implementation tasks for Login and User Greeting"
 
 ### Implementation for User Story 2
 
-- [ ] T024 [P] [US2] Implement fixed-threshold failed-login rate-limit policy of 5 attempts per 15 minutes without logging failed-attempt usernames in `src/application/security/login-rate-limit.policy.ts`
-- [ ] T025 [P] [US2] Implement generic authentication/dependency failure contracts and fail-closed authorization decisions in `src/application/auth/failure-policy.ts`
-- [ ] T026 [US2] Integrate rate-limit checks, generic error mapping, and dependency-failure handling into login and callback routes in `src/server/routes/auth.routes.ts`
-- [ ] T027 [US2] Add protected-route session validation that denies unreadable, expired, revoked, or spoofed sessions in `src/server/middleware/require-session.ts`
-- [ ] T028 [US2] Add safe accessible error, status, focus, and retry messaging to the hosted-login return and shell views in `src/app/`
-- [ ] T029 [US2] Add focused deterministic unit tests for invalid credentials, empty/whitespace inputs, rate limiting, invalid transactions, dependency failures, and fail-closed route decisions in `tests/unit/us2-safe-login-failure/`
-- [ ] T030 [US2] Add narrow contract checks for generic BROWSER-BFF-001 failures and TELEMETRY-001 failure outcomes in `tests/contracts/us2-safe-login-failure/`
+- [X] T024 [P] [US2] Implement fixed-threshold failed-login rate-limit policy of 5 attempts per 15 minutes without logging failed-attempt usernames in `src/application/security/login-rate-limit.policy.ts`
+- [X] T025 [P] [US2] Implement generic authentication/dependency failure contracts and fail-closed authorization decisions in `src/application/auth/failure-policy.ts`
+- [X] T026 [US2] Integrate rate-limit checks, generic error mapping, and dependency-failure handling into login and callback routes in `src/server/routes/auth.routes.ts`
+- [X] T027 [US2] Add protected-route session validation that denies unreadable, expired, revoked, or spoofed sessions in `src/server/middleware/require-session.ts`
+- [X] T028 [US2] Add safe accessible error, status, focus, and retry messaging to the hosted-login return and shell views in `src/app/`
+- [X] T029 [US2] Add focused deterministic unit tests for invalid credentials, empty/whitespace inputs, rate limiting, invalid transactions, dependency failures, and fail-closed route decisions in `tests/unit/us2-safe-login-failure/`
+- [X] T030 [US2] Add narrow contract checks for generic BROWSER-BFF-001 failures and TELEMETRY-001 failure outcomes in `tests/contracts/us2-safe-login-failure/`
 
 **Checkpoint**: User Story 2 is independently testable: no unsuccessful or failed-closed path creates protected access, leaks account existence, or bypasses the threshold.
 
