@@ -13,6 +13,8 @@ export interface RequireSessionOptions {
 export function createRequireSessionMiddleware(options: RequireSessionOptions): RequestHandler {
     return async (request, response, next) => {
         response.setHeader('Cache-Control', 'no-store');
+        response.setHeader('Pragma', 'no-cache');
+        response.setHeader('Vary', 'Cookie');
         const reference = options.sessionCookie.read(request.headers.cookie);
         let session: AuthenticatedSession | null = null;
         try {

@@ -90,12 +90,12 @@ description: "Implementation tasks for Login and User Greeting"
 
 ### Implementation for User Story 3
 
-- [ ] T031 [P] [US3] Implement local session invalidation, cookie clearing, and provider-logout orchestration with idempotent failure handling in `src/application/auth/logout.use-case.ts`
-- [ ] T032 [US3] Add CSRF-protected `POST /logout` route with local invalidation before provider logout and redirect to `/login` in `src/server/routes/logout.routes.ts`
-- [ ] T033 [US3] Add cache/history protection headers and post-logout protected-route enforcement in `src/server/middleware/require-session.ts`
-- [ ] T034 [US3] Add accessible sign-out action, focus behavior, and safe provider-logout failure status in `src/app/`
-- [ ] T035 [US3] Add focused deterministic unit tests for CSRF enforcement, local-first invalidation, idempotent provider failure, direct navigation denial, and independent multi-session behavior in `tests/unit/us3-logout/`
-- [ ] T036 [US3] Add narrow contract checks for logout, cookie, CSRF, and provider-failure behavior in `tests/contracts/us3-logout/`
+- [X] T031 [P] [US3] Implement local session invalidation, cookie clearing, and provider-logout orchestration with idempotent failure handling in `src/application/auth/logout.use-case.ts`
+- [X] T032 [US3] Add CSRF-protected `POST /logout` route with local invalidation before provider logout and redirect to `/login` in `src/server/routes/logout.routes.ts`
+- [X] T033 [US3] Add cache/history protection headers and post-logout protected-route enforcement in `src/server/middleware/require-session.ts`
+- [X] T034 [US3] Add accessible sign-out action, focus behavior, and safe provider-logout failure status in `src/app/`
+- [X] T035 [US3] Add focused deterministic unit tests for CSRF enforcement, local-first invalidation, idempotent provider failure, direct navigation denial, and independent multi-session behavior in `tests/unit/us3-logout/`
+- [X] T036 [US3] Add narrow contract checks for logout, cookie, CSRF, and provider-failure behavior in `tests/contracts/us3-logout/`
 
 **Checkpoint**: User Story 3 is independently testable: sign-out removes only the current session's access and remains safe when provider logout is unavailable.
 

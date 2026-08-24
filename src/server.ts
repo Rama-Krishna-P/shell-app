@@ -20,6 +20,9 @@ import { createRedisConnection, RedisLoginRateLimitAdapter, RedisSessionReposito
 import { LoginRateLimitPolicy } from './application/security/login-rate-limit.policy';
 import { SecureCookieAdapter } from './infrastructure/security/security-adapters';
 import { createAuthRouter } from './server/routes/auth.routes';
+import { createLogoutRouter } from './server/routes/logout.routes';
+import { CsrfTokenAdapter } from './infrastructure/security/security-adapters';
+import { LogoutUseCase } from './application/auth/logout.use-case';
 
 // Load local overrides first, then fall back to the standard `.env` file.
 // Existing process environment variables are not overwritten.
@@ -60,7 +63,13 @@ if (runtimeConfig.ok && process.env['SHELL_OIDC_CLIENT_SECRET']) {
         sessions,
         rateLimit: new LoginRateLimitPolicy(new RedisLoginRateLimitAdapter(redis)),
     });
+    app.use(express.json());
     app.use(authRouter);
+    app.use(createLogoutRouter({
+        logout: new LogoutUseCase(sessions, oidc),
+        sessionCookie: new SecureCookieAdapter(runtimeConfig.value.cookieName, runtimeConfig.value.redirectUri.startsWith('https:')),
+        csrf: new CsrfTokenAdapter(process.env['SHELL_CSRF_SECRET'] ?? process.env['SHELL_OIDC_CLIENT_SECRET']),
+    }));
 } else {
     app.get('/login', (_request, response) => response.status(503).send('Sign-in is not configured.'));
 }
